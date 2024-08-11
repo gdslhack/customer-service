@@ -1,28 +1,31 @@
-// telegram-webhook.js
-const express = require('express');
-const bodyParser = require('body-parser');
-const fetch = require('node-fetch');
-const WebSocket = require('ws');
+// frontend/src/MessageBoard.js
+import { useEffect, useState } from 'react';
 
-const app = express();
-app.use(bodyParser.json());
+export default function MessageBoard() {
+  const [messages, setMessages] = useState([]);
 
-const ws = new WebSocket('ws://localhost:8080');
+  useEffect(() => {
+    const fetchMessages = async () => {
+      try {
+        const response = await fetch('/api/messages');
+        const data = await response.json();
+        setMessages(data);
+      } catch (error) {
+        console.error('Error fetching messages:', error);
+      }
+    };
 
-app.post('/telegram-webhook', async (req, res) => {
-  const message = req.body.message;
+    fetchMessages();
+  }, []);
 
-  if (ws.readyState === WebSocket.OPEN) {
-    ws.send(JSON.stringify({
-      chatId: message.chat.id,
-      text: message.text,
-      receivedAt: new Date(),
-    }));
-  }
-
-  res.sendStatus(200);
-});
-
-app.listen(3000, () => {
-  console.log('Telegram webhook server running on http://localhost:3000');
-});
+  return (
+    <div>
+      <h2>Pesan Terbaru:</h2>
+      <ul>
+        {messages.map((msg) => (
+          <li key={msg._id}>{msg.text} - {new Date(msg.receivedAt).toLocaleTimeString()}</li>
+        ))}
+      </ul>
+    </div>
+  );
+}
