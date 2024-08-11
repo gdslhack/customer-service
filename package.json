@@ -1,0 +1,18 @@
+{
+    "name": "vercel-serverless-functions",
+    "version": "1.0.0",
+    "description": "Serverless functions for Vercel",
+    "main": "index.js",
+    "scripts": {
+      "start": "node api/messages.js"
+    },
+    "dependencies": {
+      "mongodb": "^5.1.0",
+      "express": "^4.18.2"
+    },
+    "devDependencies": {},
+    "engines": {
+      "node": "18.x"
+    }
+  }
+  
